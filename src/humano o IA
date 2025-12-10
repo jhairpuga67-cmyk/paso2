@@ -1,0 +1,94 @@
+import random
+
+# --- Clase Jugador (Encapsula los datos de cada participante) ---
+class Jugador:
+    """Representa a un jugador (humano o IA) y almacena su puntaje."""
+    def __init__(self, nombre="IA"):
+        # Atributos de la clase Jugador (nombre y puntaje)
+        self.nombre = nombre
+        self.puntaje = 0
+
+    def elegir_movimiento(self, es_ia=False):
+        """Maneja la lógica de la elección del movimiento."""
+        opciones = ['piedra', 'papel', 'tijera']
+        
+        if es_ia:
+            # La IA elige al azar (como en el diagrama de flujo anterior)
+            return random.choice(opciones)
+        else:
+            # El jugador humano introduce la elección
+            while True:
+                eleccion = input(f"({self.nombre}), elige (piedra, papel, tijera) o 'salir': ").lower()
+                if eleccion == 'salir':
+                    return 'salir'
+                if eleccion in opciones:
+                    return eleccion
+                print("Opción no válida. Intenta de nuevo.")
+
+# --- Clase JuegoRPS (Maneja la lógica central, el flujo y los objetos Jugador) ---
+class JuegoRPS:
+    """Controla el flujo del juego, las reglas y los puntajes."""
+    def __init__(self):
+        # Atributos: Inicializa las dos instancias de la clase Jugador
+        self.jugador_humano = Jugador("Usuario")
+        self.jugador_ia = Jugador() # Utiliza el nombre "IA" por defecto
+        
+        # Reglas: Diccionario para determinar si el primer elemento gana al segundo
+        self.reglas = {
+            ('piedra', 'tijera'): True, # Piedra gana a Tijera
+            ('papel', 'piedra'): True,  # Papel gana a Piedra
+            ('tijera', 'papel'): True   # Tijera gana a Papel
+        }
+
+    def determinar_ganador(self, mov_humano, mov_ia):
+        """Compara movimientos y actualiza el puntaje del ganador."""
+        if mov_humano == mov_ia:
+            return "¡Es un empate! Nadie gana puntos."
+        
+        elif (mov_humano, mov_ia) in self.reglas:
+            # El jugador humano está en las reglas de victoria
+            self.jugador_humano.puntaje += 1
+            return f"🎉 ¡{self.jugador_humano.nombre} gana la ronda!"
+        
+        else:
+            # La IA gana por descarte
+            self.jugador_ia.puntaje += 1
+            return f" ¡{self.jugador_ia.nombre} gana la ronda!"
+
+    def mostrar_puntaje(self):
+        """Imprime el puntaje actual en la consola."""
+        print(f"\n--- PUNTAJE ACTUAL ---")
+        print(f"{self.jugador_humano.nombre}: {self.jugador_humano.puntaje} victorias")
+        print(f"{self.jugador_ia.nombre}: {self.jugador_ia.puntaje} victorias")
+        print("----------------------")
+
+    def iniciar_juego(self):
+        """Contiene el bucle principal de ejecución del juego."""
+        print("\n--- ¡INICIO DEL JUEGO V2.0 (POO)! ---")
+        
+        while True:
+            self.mostrar_puntaje()
+            
+            # 1. Obtener movimientos
+            mov_humano = self.jugador_humano.elegir_movimiento()
+            
+            # 2. Control de salida (Si el usuario escribe 'salir')
+            if mov_humano == 'salir':
+                break
+                
+            mov_ia = self.jugador_ia.elegir_movimiento(es_ia=True)
+            
+            # 3. Mostrar elecciones y actualizar puntaje
+            print(f"\n{self.jugador_humano.nombre} elige: {mov_humano.capitalize()}")
+            print(f"{self.jugador_ia.nombre} elige: {mov_ia.capitalize()}")
+            
+            resultado = self.determinar_ganador(mov_humano, mov_ia)
+            print(f"\n*** {resultado} ***")
+
+        print("\n--- JUEGO FINALIZADO ---")
+        self.mostrar_puntaje() # Muestra el puntaje final antes de salir
+
+# --- Ejecución del Programa (Crea una instancia de la clase controladora) ---
+if __name__ == "__main__":
+    juego = JuegoRPS()
+    juego.iniciar_juego()
