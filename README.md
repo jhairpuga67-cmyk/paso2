@@ -1,6 +1,6 @@
 # Piedra-Papel-o-Tijera: Proyecto Final
 
-**Link al Video Explicativo:**
+**Link al Video Explicativo:** https://drive.google.com/file/d/1b_I56653NYrUPZIIVz4_RnywusHh3Ln-/view?usp=sharing
 
 ---
 
